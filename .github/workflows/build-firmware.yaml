@@ -1,0 +1,383 @@
+name: Firmware at GHA
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      do_upload:
+        description: 'Upload Build Outputs'
+        required: false
+        type: boolean
+      build_name:
+        description: 'Release Build Name'
+        required: false
+        type: string
+
+jobs:
+  build-libopenblt-linux:
+    runs-on: ubuntu-latest-selfhost
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: true
+
+    - name: cmake configure libopenblt
+      working-directory: ./firmware/ext/openblt/Host/Source/LibOpenBLT/build
+      run: cmake -DCMAKE_BUILD_TYPE=Release ..
+
+    - name: make libopenblt
+      working-directory: ./firmware/ext/openblt/Host/Source/LibOpenBLT/build
+      run: make -j8
+
+    - name: cmake configure libopenblt_jni
+      working-directory: ./misc/libopenblt_jni/build
+      run: cmake -DCMAKE_BUILD_TYPE=Release ..
+
+    - name: make libopenblt_jni
+      working-directory: ./misc/libopenblt_jni/build
+      run: make -j8
+
+    - name: coalesce
+      run: |
+        mkdir deliver
+        cp ./firmware/ext/openblt/Host/libopenblt.so deliver/
+        cp ./misc/libopenblt_jni/build/libopenblt_jni.so deliver/
+
+    - uses: actions/upload-artifact@v4
+      with:
+        name: libopenblt-linux
+        path: |
+          ./deliver/libopenblt.so
+          ./deliver/libopenblt_jni.so
+
+  build-libopenblt-macos:
+    runs-on: macos-13
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: true
+
+    - name: cmake configure libopenblt
+      working-directory: ./firmware/ext/openblt/Host/Source/LibOpenBLT/build
+      run: cmake -DCMAKE_BUILD_TYPE=Release ..
+
+    - name: make libopenblt
+      working-directory: ./firmware/ext/openblt/Host/Source/LibOpenBLT/build
+      run: make -j8
+
+    - name: cmake configure libopenblt_jni
+      working-directory: ./misc/libopenblt_jni/build
+      run: cmake -DCMAKE_BUILD_TYPE=Release ..
+
+    - name: make libopenblt_jni
+      working-directory: ./misc/libopenblt_jni/build
+      run: make -j8
+
+    - name: coalesce
+      run: |
+        mkdir deliver
+        cp ./firmware/ext/openblt/Host/libopenblt.dylib deliver/
+        cp ./misc/libopenblt_jni/build/libopenblt_jni.dylib deliver/
+
+    - uses: actions/upload-artifact@v4
+      with:
+        name: libopenblt-macos
+        path: |
+          ./deliver/libopenblt.dylib
+          ./deliver/libopenblt_jni.dylib
+
+  build-firmware:
+    needs: [build-libopenblt-linux, build-libopenblt-macos]
+    runs-on: ubuntu-latest-selfhost
+
+    strategy:
+      # Let all builds finish even if one fails early
+      fail-fast: false
+      matrix:
+        include:
+          # Board configurations
+          - build-target: hellen72
+            folder: config/boards/hellen/hellen72
+            ini-file: ecu_hellen72.ini
+
+          # - build-target: hellen81
+          #   folder: config/boards/hellen/hellen81
+          #   ini-file: ecu_hellen81.ini
+
+          # - build-target: alphax-2chan
+          #   folder: config/boards/hellen/alphax-2chan
+          #   ini-file: ecu_alphax-2chan.ini
+
+          # - build-target: alphax-4chan
+          #   folder: config/boards/hellen/alphax-4chan
+          #   ini-file: ecu_alphax-4chan.ini
+
+          # - build-target: alphax-8chan
+          #   folder: config/boards/hellen/alphax-8chan
+          #   ini-file: ecu_alphax-8chan.ini
+
+          # - build-target: harley81
+          #   folder: config/boards/hellen/harley81
+          #   ini-file: ecu_harley81.ini
+
+          - build-target: small-can-board
+            folder: config/boards/hellen/small-can-board
+            ini-file: ecu_small-can-board.ini
+
+          # - build-target: hellen88bmw
+          #   folder: config/boards/hellen/hellen88bmw
+          #   ini-file: ecu_hellen88bmw.ini
+
+          - build-target: hellen-nb1
+            folder: config/boards/hellen/hellen-nb1
+            ini-file: ecu_hellen-nb1.ini
+
+          # - build-target: hellen-gm-e67
+          #   folder: config/boards/hellen/hellen-gm-e67
+          #   ini-file: ecu_hellen-gm-e67.ini
+
+          - build-target: hellenNA8_96
+            folder: config/boards/hellen/hellenNA8_96
+            ini-file: ecu_hellenNA8_96.ini
+
+          - build-target: hellenNA6
+            folder: config/boards/hellen/hellen64_miataNA6_94
+            ini-file: ecu_hellenNA6.ini
+
+          - build-target: hellen128
+            folder: config/boards/hellen/hellen128
+            ini-file: ecu_hellen128.ini
+
+          # - build-target: hellen121vag
+          #   folder: config/boards/hellen/hellen121vag
+          #   ini-file: ecu_hellen121vag.ini
+
+          # - build-target: hellen121nissan
+          #   folder: config/boards/hellen/hellen121nissan
+          #   ini-file: ecu_hellen121nissan.ini
+
+          # - build-target: hellen-honda-k
+          #   folder: config/boards/hellen/hellen-honda-k
+          #   ini-file: ecu_hellen-honda-k.ini
+
+          # - build-target: hellen154hyundai
+          #   folder: config/boards/hellen/hellen154hyundai
+          #   ini-file: ecu_hellen154hyundai.ini
+
+          # - build-target: frankenso_na6
+          #   folder: config/boards/frankenso
+          #   ini-file: ecu_frankenso_na6.ini
+
+          - build-target: mre_f4
+            folder: config/boards/microrusefi
+            ini-file: ecu_mre_f4.ini
+
+          # - build-target: mre_f4_no_openblt
+          #   folder: config/boards/microrusefi
+          #   ini-file: ecu_mre_f4.ini
+
+          # - build-target: mre_f4_debug
+          #   folder: config/boards/microrusefi
+          #   ini-file: ecu_mre_f4.ini
+
+          # - build-target: mre_f4_recovery
+          #   folder: config/boards/microrusefi
+          #   ini-file: ecu_mre_f4.ini
+
+          - build-target: mre_f7
+            folder: config/boards/microrusefi
+            ini-file: ecu_mre_f7.ini
+
+          # - build-target: prometheus_405
+          #   folder: config/boards/prometheus
+          #   ini-file: ecu_prometheus_405.ini
+
+          # - build-target: prometheus_469
+          #   folder: config/boards/prometheus
+          #   ini-file: ecu_prometheus_469.ini
+
+          - build-target: proteus_f4
+            folder: config/boards/proteus
+            ini-file: ecu_proteus_f4.ini
+
+          - build-target: proteus_f7
+            folder: config/boards/proteus
+            ini-file: ecu_proteus_f7.ini
+
+          - build-target: proteus_h7
+            folder: config/boards/proteus
+            ini-file: ecu_proteus_h7.ini
+
+          - build-target: stm32f429_nucleo
+            folder: config/boards/nucleo_f429
+            ini-file: ecu_stm32f429_nucleo.ini
+
+          # - build-target: stm32f767_nucleo
+          #   folder: config/boards/nucleo_f767
+          #   ini-file: ecu_stm32f767_nucleo.ini
+
+          # - build-target: stm32h743_nucleo
+          #   folder: config/boards/nucleo_h743
+          #   ini-file: ecu_stm32h743_nucleo.ini
+
+          # - build-target: subaru_eg33_f7
+          #   folder: config/boards/subaru_eg33
+          #   ini-file: ecu_subaru_eg33_f7.ini
+
+          - build-target: f407-discovery
+            folder: config/boards/f407-discovery
+            ini-file: ecu_f407-discovery.ini
+
+          # - build-target: f429-discovery
+          #   folder: config/boards/f429-discovery
+          #   ini-file: ecu_f429-discovery.ini
+
+          - build-target: core8
+            folder: config/boards/core8
+            ini-file: ecu_core8.ini
+
+          - build-target: core48
+            folder: config/boards/core48
+            ini-file: ecu_core48.ini
+
+          - build-target: atlas
+            folder: config/boards/atlas
+            ini-file: ecu_atlas.ini
+
+          # - build-target: tdg-pdm8
+          #   folder: config/boards/tdg-pdm8
+          #   ini-file: ecu_tdg-pdm8.ini
+
+    steps:
+    - name: Check branch name
+      if: ${{ contains(github.ref_name, '.') }}
+      run: echo '::error::Branch names must not contain ".", this breaks firmware autoupdates.' && exit 1
+
+    - name: Set run condition variables
+      run: |
+        if [ "${{github.repository}}" = "ECU-tech/ecu-fw" ]\
+        && [ "${{github.event_name}}" = "push" ]\
+        && [ "${{github.ref}}" = "refs/heads/master" ]\
+        || [ "${{toJSON(inputs.do_upload)}}" = "true" ]; then
+          echo "full=true" >> $GITHUB_ENV
+          echo "upload=true" >> $GITHUB_ENV
+        elif [ "${{github.event_name}}" = "push" ]\
+        && [ "${{github.ref}}" = "refs/heads/master" ]; then
+          echo "full=true" >> $GITHUB_ENV
+        fi
+
+    - uses: actions/checkout@v4
+      with:
+        submodules: true
+
+    # - uses: actions/setup-java@v3
+    #   with:
+    #     distribution: 'zulu'
+    #     java-version: '8'
+
+    # - name: Install multilib, mingw, sshpass and mtools
+    #   working-directory: ./.github/workflows/
+    #   run: |
+    #     sudo ./add-ubuntu-latest-apt-mirrors.sh
+    #     sudo apt-get install gcc-multilib g++-multilib g++-mingw-w64 gcc-mingw-w64 sshpass mtools
+    #     sudo apt-get install zip
+    #     sudo apt-get install dosfstools
+
+    - name: Generate Live Documentation
+      working-directory: ./firmware/
+      run: ./gen_live_documentation.sh
+
+    # - name: Configs Set SSH variables
+    #   if: ${{ env.full == 'true' && env.upload == 'true' }}
+    #   env:
+    #     ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+    #   run: |
+    #     echo "::set-env name=RUSEFI_SSH_SERVER::${{secrets.RUSEFI_SSH_SERVER}}";
+    #     echo "::set-env name=RUSEFI_SSH_USER::${{secrets.RUSEFI_SSH_USER}}";
+    #     echo "::set-env name=RUSEFI_SSH_PASS::${{secrets.RUSEFI_SSH_PASS}}";
+
+    # Build the firmware!
+    - name: Build Firmware
+      run: bash misc/jenkins/compile_other_versions/compile.sh ${{matrix.folder}} ${{matrix.build-target}}
+
+    # Build rusEFI console
+    - name: Build console
+      if: ${{ env.full == 'true' }}
+      run: bash misc/jenkins/build_java_console.sh
+
+    # Build the simulator
+    - name: Build simulator
+      if: ${{ env.full == 'true' }}
+      working-directory: ./simulator/
+      # 'OS="Windows_NT"' allows us to build Windows executable on unix
+      run: OS="Windows_NT" SHORT_BOARD_NAME=${{matrix.build-target}} ./compile.sh
+
+    - name: Download LibOpenBLT Tool (Linux)
+      uses: actions/download-artifact@v4
+      with:
+        name: libopenblt-linux
+        path: ./firmware/ext/openblt/Host/
+
+    - name: Download LibOpenBLT Tool (MacOS)
+      uses: actions/download-artifact@v4
+      with:
+        name: libopenblt-macos
+        path: ./firmware/ext/openblt/Host/
+
+    - name: Package Bundle
+      if: ${{ env.full == 'true' }}
+      run: bash misc/jenkins/compile_other_versions/prepare_bundle.sh ${{matrix.build-target}} "${{matrix.ini-file}}" ${{ toJSON(inputs.build_name) }}
+
+    - name: Upload INI to tunes.ecu.tech
+      if: ${{ env.full == 'true' && env.upload == 'true' }}
+      uses: hyper-tuner/ini-upload-action@v1
+      continue-on-error: true
+      with:
+        api-url: "${{ secrets.HYPER_TUNER_INI_UPLOAD_URL }}"
+        username: "${{ secrets.HYPER_TUNER_INI_UPLOAD_USERNAME }}"
+        password: "${{ secrets.HYPER_TUNER_INI_UPLOAD_PASSWORD }}"
+        path: ./firmware/tunerstudio/generated/${{matrix.ini-file}}
+        ecosystem: ecu
+
+    # - name: Upload .ini files
+    #   if: ${{ env.full == 'true' && env.upload == 'true' }}
+    #   working-directory: ./firmware/tunerstudio/generated
+    #   run: ../upload_ini.sh ${{matrix.ini-file}} ${{ secrets.RUSEFI_ONLINE_FTP_USER }} ${{ secrets.RUSEFI_ONLINE_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
+
+    # - name: Upload build elf
+    #   if: ${{ env.full == 'true' && env.upload == 'true' }}
+    #   uses: actions/upload-artifact@v3
+    #   with:
+    #     name: ecu_${{matrix.build-target}}.elf
+    #     path: ./firmware/build/rusefi.elf
+
+    # - name: Upload build bin
+    #   if: ${{ env.full == 'true' && env.upload == 'true' }}
+    #   uses: actions/upload-artifact@v3
+    #   with:
+    #     name: ecu_${{matrix.build-target}}.bin
+    #     path: ./firmware/deliver/rusefi*.bin
+
+    # - name: Upload build hex
+    #   if: ${{ env.full == 'true' && env.upload == 'true' }}
+    #   uses: actions/upload-artifact@v3
+    #   with:
+    #     name: ecu_${{matrix.build-target}}.hex
+    #     path: ./firmware/deliver/rusefi*.hex
+
+    # - name: Upload build dfu
+    #   if: ${{ env.full == 'true' && env.upload == 'true' }}
+    #   uses: actions/upload-artifact@v3
+    #   with:
+    #     name: ecu_${{matrix.build-target}}.dfu
+    #     path: ./firmware/deliver/rusefi*.dfu
+
+    - name: Upload bundle
+      if: ${{ env.full == 'true' && env.upload == 'true' }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: ecu_bundle_${{matrix.build-target}}.zip
+        path: ./artifacts/ecu_bundle_${{matrix.build-target}}.zip
