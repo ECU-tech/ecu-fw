@@ -5,7 +5,6 @@
 [![Release](https://img.shields.io/github/v/release/ECU-tech/ecu-fw?style=flat)](https://github.com/ECU-tech/ecu-fw/releases/latest) ![Last Commit](https://img.shields.io/github/last-commit/ECU-tech/ecu-fw?style=flat)
 [![Unit Tests](https://img.shields.io/github/actions/workflow/status/ECU-tech/ecu-fw/build-unit-tests.yaml?label=Unit%20Tests&branch=master)](https://github.com/ECU-tech/ecu-fw/actions/workflows/build-unit-tests.yaml)
 ![GitHub commits since latest release (by date)](https://img.shields.io/github/commits-since/ECU-tech/ecu-fw/latest?color=blueviolet&label=Commits%20Since%20Release)
-[![ECU-tech Discord](https://img.shields.io/discord/1060875162892898324?label=Discord&logo=Discord)](https://discord.gg/EEg2fbhQD4)
 
 </div>
 
