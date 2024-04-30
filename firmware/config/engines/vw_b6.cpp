@@ -14,21 +14,19 @@
 #include "defaults.h"
 #include "proteus_meta.h"
 
+#if HW_MICRO_RUSEFI || HW_PROTEUS
 static inline void commonPassatB6() {
 	setCrankOperationMode();
 	engineConfiguration->trigger.type = trigger_type_e::TT_TOOTHED_WHEEL_60_2;
 	engineConfiguration->vvtMode[0] = VVT_BOSCH_QUICK_START;
 	engineConfiguration->map.sensor.type = MT_BOSCH_2_5;
 
-    setTable(config->injectionPhase, -180.0f);
+    engineConfiguration->globalTriggerAngleOffset = 90;
 
-	engineConfiguration->etbIdleThrottleRange = 10;
 	engineConfiguration->idlePidRpmDeadZone = 500;
 	engineConfiguration->idleMode = IM_AUTO;
 
-	engineConfiguration->cylindersCount = 4;
-	engineConfiguration->firingOrder = FO_1_3_4_2;
-	engineConfiguration->isPhaseSyncRequiredForIgnition = true;
+	setInline4();
 
 	engineConfiguration->disableEtbWhenEngineStopped = true;
 
@@ -45,15 +43,8 @@ static inline void commonPassatB6() {
 
 	// Injectors flow 1214 cc/min at 100 bar pressure
 	engineConfiguration->injector.flow = 1214;
-	// Use high pressure sensor
-	engineConfiguration->injectorPressureType = IPT_High;
-	// Automatic compensation of injector flow based on rail pressure
-	engineConfiguration->injectorCompensationMode = ICM_SensedRailPressure;
-	// Reference rail pressure is 10 000 kPa = 100 bar
-	engineConfiguration->fuelReferencePressure = 10000;
-	//setting "flat" 0.2 ms injector's lag time
-	setArrayValues(engineConfiguration->injector.battLagCorr, 0.2);
-	
+	setGDIFueling();
+
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_VAG);
 	strcpy(engineConfiguration->engineCode, "BPY");
 	strcpy(engineConfiguration->vehicleName, "test");
@@ -105,18 +96,10 @@ static inline void commonPassatB6() {
 	}
 */
 
-	engineConfiguration->hpfpCamLobes = 3;
-	engineConfiguration->hpfpPumpVolume = 0.290;
-	engineConfiguration->hpfpMinAngle = 10;
-	engineConfiguration->hpfpActivationAngle = 30;
-	engineConfiguration->hpfpTargetDecay = 2000;
-	engineConfiguration->hpfpPidP = 0.01;
-	engineConfiguration->hpfpPidI = 0.0003;
-
-	engineConfiguration->hpfpPeakPos = 10;
-
 	setTable(config->veTable, 55);
+#if EFI_ELECTRONIC_THROTTLE_BODY
 	setBoschVAGETB();
+#endif //EFI_ELECTRONIC_THROTTLE_BODY
 
 	// random number just to take position away from zero
 	engineConfiguration->vvtOffsets[0] = 180;
@@ -130,6 +113,7 @@ static inline void commonPassatB6() {
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
 }
+#endif // HW_MICRO_RUSEFI || HW_PROTEUS
 
 
 // MAF signal frequency after hardware divider x16, Hz
@@ -183,24 +167,22 @@ void setProteusVwPassatB6() {
 	engineConfiguration->highPressureFuel.hwChannel = PROTEUS_IN_ANALOG_VOLT_4;
 
 	gppwm_channel *coolantControl = &engineConfiguration->gppwm[0];
-	coolantControl->pin = PROTEUS_LS_5;
+	coolantControl->pin = Gpio::PROTEUS_LS_5;
 
-	engineConfiguration->mainRelayPin = PROTEUS_LS_6;
+	engineConfiguration->mainRelayPin = Gpio::PROTEUS_LS_6;
 
 	gppwm_channel *lowPressureFuelPumpControl = &engineConfiguration->gppwm[1];
-	lowPressureFuelPumpControl->pin = PROTEUS_LS_7;
+	lowPressureFuelPumpControl->pin = Gpio::PROTEUS_LS_7;
 
-	//engineConfiguration->boostControlPin = PROTEUS_LS_8;
-	engineConfiguration->vvtPins[0] = PROTEUS_LS_9;
-	engineConfiguration->hpfpValvePin = PROTEUS_LS_15;
+	//engineConfiguration->boostControlPin = Gpio::PROTEUS_LS_8;
+	engineConfiguration->vvtPins[0] = Gpio::PROTEUS_LS_9;
+	engineConfiguration->hpfpValvePin = Gpio::PROTEUS_LS_15;
 
-
-	engineConfiguration->tps1_2AdcChannel = PROTEUS_IN_TPS1_2;
-	setPPSInputs(PROTEUS_IN_ANALOG_VOLT_9, PROTEUS_IN_PPS2);
+    setProteusEtbIO();
 
     #include "vw_b6.lua"
 
-#endif
+#endif // HW_PROTEUS
 }
 
 /**
@@ -212,7 +194,7 @@ void setMreVwPassatB6() {
 #if HW_MICRO_RUSEFI
 	commonPassatB6();
 
-	engineConfiguration->afr.hwChannel = MRE_IN_ANALOG_VOLT_10;
+//	engineConfiguration->afr.hwChannel = MRE_IN_ANALOG_VOLT_10;
 
 	engineConfiguration->tps1_2AdcChannel = MRE_IN_ANALOG_VOLT_9;
 

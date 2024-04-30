@@ -8,21 +8,11 @@
 
 </div>
 
-# [ECU-tech: Free Open Motorsports ECU](https://www.ecu.tech/)
+# [ECU-tech: Free Open Source ECU]
 
-Welcome to ECU-tech, a project intended to provide OEM quality open source engine controls and [free software](https://www.fsf.org/about/what-is-free-software) with a focus on user-friendly design, stability and ease of use. 
+Welcome to ECU-tech, a project intended to provide OEM quality open source engine controls and focus on user-friendly design, stability and ease of use. 
 
-ECU-tech intends to narrow the gap between the features and functions seen on modern OEM engine control systems and that expected from stand-alone engine control systems. At the same time ECU-tech intends to improve the ease of working with these systems and help provide access to the learning resources needed to understand and tune engines effectively.
-
-ECU-tech came about from a desire to enhance the user experience of rusEFI that was shared by a number of members of that project; over time it became apparent that the best way to achieve this goal was to begin working on a fork. Thus at the start of 2023 ECU-tech was founded.
-
-The founding members would like to express gratitude towards rusEFI for its ground breaking work and the innovation it has brought to the ECU market.
-
-At present ECU-tech shares a large amount of its core with the rusEFI project and most rusEFI boards are compatible with the ECU-tech software; this is likely something that will continue to diverge over time, meaning full compatibility with older RE hardware cannot be guaranteed.
-
-# User Documentation
-
-Online and offline (PDF) versions of the user manual available here: https://wiki.ecu.tech/
+At present ECU-tech shares a large amount of its core with the rusEFI project and most rusEFI boards are compatible with the ECU-tech software
 
 # What Do We Have Here?
  * [Firmware](/firmware) - Source code for open source engine control unit for stm32 chips
@@ -34,19 +24,12 @@ Online and offline (PDF) versions of the user manual available here: https://wik
 
 # External Links
 
- * [Wiki](https://wiki.ecu.tech/)
- * [Forum](https://www.ecu.tech/forum)
- * [Discord](https://discord.gg/EEg2fbhQD4)
- * [Facebook](https://www.facebook.com/ecu.tech)
+ * [Wiki](https://wiki./)
+ * [Forum](https://www/forum)
+ * [Facebook](https://www.facebook.com/)
 <!--
  * [YouTube](https://www.youtube.com/)
 -->
-
-# Contributors
-
-This project exists thanks to all the people who contribute their time, expertise, and testing.
-
-If you'd like to get involved, see [contributing](CONTRIBUTING.md).
 
 ## Getting Started
 

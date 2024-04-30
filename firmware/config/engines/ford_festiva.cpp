@@ -72,7 +72,8 @@ void setFordEscortGt() {
 	engineConfiguration->displacement = 1.839;
 	setAlgorithm(LM_SPEED_DENSITY);
 
-	static const uint16_t veRpmBins[] = 
+#if (IGN_RPM_COUNT == DEFAULT_IGN_LOAD_COUNT) && (IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT)
+	static const uint16_t veRpmBins[] =
 	{
 		800,
 		1200,
@@ -93,9 +94,8 @@ void setFordEscortGt() {
 	};
 
 	copyArray(config->veRpmBins, veRpmBins);
-
-
 	copyTable(config->veTable, racingFestivaVeTable);
+#endif
 
 //	engineConfiguration->triggerInputPins[0] = Gpio::C6; // 2G YEL/BLU
 //	engineConfiguration->triggerInputPins[1] = Gpio::A5; // 2E White CKP
@@ -175,7 +175,6 @@ void setFordEscortGt() {
 
 
 	// 40% idle is good default
-	engineConfiguration->idle.solenoidFrequency = 300;
 	engineConfiguration->idle.solenoidPin = Gpio::B9;
 
 	engineConfiguration->malfunctionIndicatorPin = Gpio::E5;
@@ -199,6 +198,7 @@ void setFordEscortGt() {
 	// todo: 8.2 or 10k?
 	engineConfiguration->vbattDividerCoeff = ((float) (10 + 33)) / 10 * 2;
 
+#if (IGN_RPM_COUNT == DEFAULT_IGN_RPM_COUNT) && (IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT)
 	// VICS solenoid
 	static const uint16_t ignitionRpmBins[] =
 	{
@@ -222,7 +222,6 @@ void setFordEscortGt() {
 
 	copyArray(config->ignitionRpmBins, ignitionRpmBins);
 
-#if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
 	copyTable(config->ignitionTable, racingFestivaIgnitionTable);
 #endif
 

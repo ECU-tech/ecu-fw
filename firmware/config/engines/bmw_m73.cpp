@@ -76,6 +76,7 @@
 
 #include "bmw_m73.h"
 #include "custom_engine.h"
+#include "hip9011_logic.h"
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
 #include "electronic_throttle.h"
@@ -270,13 +271,19 @@ void setEngineBMW_M73_Proteus() {
 	engineConfiguration->clt.adcChannel = PROTEUS_IN_ANALOG_TEMP_4;
 
 
-	// Gpio::E0:  "Lowside 14"
-	engineConfiguration->starterControlPin = Gpio::E0;
-	// Gpio::E12: "Digital 3"
-	engineConfiguration->startStopButtonPin = Gpio::E12;
+	engineConfiguration->starterControlPin = Gpio::PROTEUS_LS_14;
+	engineConfiguration->startStopButtonPin = PROTEUS_DIGITAL_3;
 	engineConfiguration->startStopButtonMode = PI_PULLUP;
+	engineConfiguration->fuelPumpPin = Gpio::PROTEUS_LS_16;
+	engineConfiguration->fanPin = Gpio::PROTEUS_LS_15;
+	engineConfiguration->mainRelayPin = Gpio::PROTEUS_LS_13;
+
+    engineConfiguration->map.sensor.hwChannel = PROTEUS_IN_ANALOG_VOLT_8; // M73 adapter board
+    engineConfiguration->map.sensor.type = MT_MPX4250A;
 
 	// tps and pps
+#if EFI_ELECTRONIC_THROTTLE_BODY
 	setProteusHitachiEtbDefaults();
+#endif // EFI_ELECTRONIC_THROTTLE_BODY
 }
 #endif // HW_PROTEUS

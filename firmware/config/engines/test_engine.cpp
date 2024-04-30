@@ -13,16 +13,12 @@
 
 #include "pch.h"
 #include "test_engine.h"
+#include "proteus_meta.h"
 
 // TEST_ENGINE
 void setTestCamEngineConfiguration() {
 	engineConfiguration->trigger.type = trigger_type_e::TT_ONE_PLUS_ONE;
 	setCamOperationMode();
-
-//	engineConfiguration->trigger.type = trigger_type_e::TT_TOOTHED_WHEEL;
-//	trigger_config_s *triggerConfig = &engineConfiguration->trigger;
-//	triggerConfig->customTotalToothCount = 60;
-//	triggerConfig->customSkippedToothCount = 0;
 
 	engineConfiguration->mafAdcChannel = EFI_ADC_1;
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_2;
@@ -46,11 +42,10 @@ void setTestCamEngineConfiguration() {
 	engineConfiguration->ignitionPins[5] = Gpio::Unassigned; // #6
 }
 
-
 void setTestCrankEngineConfiguration() {
 	setTestCamEngineConfiguration();
 
-	engineConfiguration->trigger.type = trigger_type_e::TT_ONE;
+	engineConfiguration->trigger.type = trigger_type_e::TT_HALF_MOON;
 
 	setCrankOperationMode();
 	// this is related to 'setDefaultBaseEngine' having 'skippedWheelOnCam = true' which is a weird fact by itself
@@ -108,16 +103,17 @@ void setTestEngineIssue366rise() {
 #endif /* EFI_UNIT_TEST */
 
 #ifdef HARDWARE_CI
+// set engine_type 30
 void setProteusAnalogPwmTest() {
 	// lowest cpu trigger possible
-	engineConfiguration->trigger.type = trigger_type_e::TT_ONE;
+	engineConfiguration->trigger.type = trigger_type_e::TT_HALF_MOON;
 
 	// Disable trigger stim
 	engineConfiguration->triggerSimulatorPins[0] = Gpio::Unassigned;
 	engineConfiguration->triggerSimulatorPins[1] = Gpio::Unassigned;
 
 	// The idle control pin is connected to the default TPS input, analog volt 2
-	engineConfiguration->idle.solenoidPin = Gpio::G4;
+	engineConfiguration->idle.solenoidPin = Gpio::PROTEUS_IGN_10;
 
 	// 5893hz is coprime with the analog sample rate, 500hz, so hopefully we get less aliasing
 	engineConfiguration->idle.solenoidFrequency = 5893;
@@ -126,4 +122,4 @@ void setProteusAnalogPwmTest() {
 	engineConfiguration->tpsMin = 200;
 	engineConfiguration->tpsMax = 800;
 }
-#endif
+#endif // HARDWARE_CI

@@ -12,12 +12,18 @@ void setFrankensoConfiguration();
 void runSchedulingPrecisionTestIfNeeded(void);
 void setDiscoveryPdm();
 void setFrankensoBoardTestConfiguration();
+void setDiscovery33810Test();
 void setEtbTestConfiguration();
-void setTle8888TestConfiguration();
 void setL9779TestConfiguration();
 
+void setEepromTestConfiguration();
+
 void mreBoardNewTest();
+void mreSecondaryCan();
 void mreBCM();
+void setBodyControlUnit();
+
+void fuelBenchMode();
 
 /**
  * PROTEUS_QC_TEST_BOARD
@@ -25,7 +31,8 @@ void mreBCM();
  */
 void proteusBoardTest();
 void proteusLuaDemo();
-void proteusHarley();
+void proteusStimQc();
+void setHarley();
 void proteusDcWastegateTest();
 
 void setTest33816EngineConfiguration();
@@ -35,3 +42,5 @@ void setRotary();
 void setVrThresholdTest();
 
 void detectBoardType();
+
+void alphax4chanStimQc();

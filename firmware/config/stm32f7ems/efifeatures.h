@@ -10,12 +10,32 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+ #pragma once
+
+// Disable ini ramdisk as a mitigation of https://github.com/rusefi/rusefi/issues/3775
+// See STM32F7.ld for more info
+#ifndef EFI_EMBED_INI_MSD
+#define EFI_EMBED_INI_MSD FALSE
+#endif
+
+#ifndef ENABLE_PERF_TRACE
+#define ENABLE_PERF_TRACE TRUE
+#endif
+
+#ifndef EFI_CONSOLE_TX_BRAIN_PIN
+// todo: kill default & move into board configuration?
+#define EFI_CONSOLE_TX_BRAIN_PIN Gpio::D8
+#endif
+
+#ifndef EFI_CONSOLE_RX_BRAIN_PIN
+#define EFI_CONSOLE_RX_BRAIN_PIN Gpio::D9
+#endif
+
+// note order of include - first we set F7 defaults (above) and only later we apply F4 defaults
 #include "../stm32f4ems/efifeatures.h"
 
-#pragma once
+// todo: get rid of the 'undef' patter just move all defaults above f4 include?
 
-#undef EFI_MAX_31855
-#define EFI_MAX_31855 FALSE
 
 #undef EFI_MC33816
 #define EFI_MC33816 FALSE
@@ -28,16 +48,8 @@
 
 #define AUX_SERIAL_DEVICE (&SD6)
 
-#undef EFI_CONSOLE_TX_BRAIN_PIN
-#define EFI_CONSOLE_TX_BRAIN_PIN Gpio::D8
-
-#undef EFI_CONSOLE_RX_BRAIN_PIN
-#define EFI_CONSOLE_RX_BRAIN_PIN Gpio::D9
-
+// see also EFI_EMBED_INI_MSD which is disabled above
 #define EFI_USE_COMPRESSED_INI_MSD
-
-#undef ENABLE_PERF_TRACE
-#define ENABLE_PERF_TRACE TRUE
 
 // F7 may have dual bank, so flash on its own (low priority) thread so as to not block any other operations
 #define EFI_FLASH_WRITE_THREAD TRUE
