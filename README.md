@@ -8,7 +8,7 @@
 
 </div>
 
-# [ECU-tech: Free Open Source ECU]
+# ECU-tech: Free Open Source ECU
 
 Welcome to ECU-tech, a project intended to provide OEM quality open source engine controls and focus on user-friendly design, stability and ease of use. 
 
