@@ -10,9 +10,9 @@
 
 # ECU-tech: Free Open Source ECU
 
-Welcome to ECU-tech, a project intended to provide OEM quality open source engine controls and focus on user-friendly design, stability and ease of use. 
+A project to provide open source engine controls and focus on user-friendly design, stability and ease of use. 
 
-At present ECU-tech shares a large amount of its core with the rusEFI project and most rusEFI boards are compatible with the ECU-tech software
+ECU-tech shares a core with the rusEFI project and most rusEFI boards are compatible with the ECU-tech software
 
 # What Do We Have Here?
  * [Firmware](/firmware) - Source code for open source engine control unit for stm32 chips
@@ -26,7 +26,6 @@ At present ECU-tech shares a large amount of its core with the rusEFI project an
 
  * [Wiki](https://wiki./)
  * [Forum](https://www/forum)
- * [Facebook](https://www.facebook.com/)
 <!--
  * [YouTube](https://www.youtube.com/)
 -->
