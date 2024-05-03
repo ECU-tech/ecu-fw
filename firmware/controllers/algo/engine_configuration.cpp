@@ -723,17 +723,17 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case engine_type_e::PROTEUS_E65_6H_MAN_IN_THE_MIDDLE:
 		setEngineProteusGearboxManInTheMiddle();
 		break;
-	case engine_type_e::DELTA_MIATA_NA6:
-		setMiataNa6_Delta();
+	case engine_type_e::POLYGONUS_MIATA_NA6:
+		setMiataNa6_Polygonus();
 		break;
-	case engine_type_e::DELTA_MIATA_NB1:
-		setMiataNB1_Delta();
+	case engine_type_e::POLYGONUS_MIATA_NB1:
+		setMiataNB1_Polygonus();
 		break;
-	case engine_type_e::DELTA_MIATA_NB2:
-		setMiataNB2_Delta();
+	case engine_type_e::POLYGONUS_MIATA_NB2:
+		setMiataNB2_Polygonus();
 		break;
-	case engine_type_e::DELTA_MIATA_MSM:
-		setMiataNB_MSM_Delta();
+	case engine_type_e::POLYGONUS_MIATA_MSM:
+		setMiataNB_MSM_Polygonus();
 		break;
 #ifdef HARDWARE_CI
 	case engine_type_e::PROTEUS_ANALOG_PWM_TEST:

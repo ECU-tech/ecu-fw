@@ -294,14 +294,14 @@ case engine_type_e::MRE_VW_B6:
   return "MRE_VW_B6";
 case engine_type_e::NISSAN_PRIMERA:
   return "NISSAN_PRIMERA";
-case engine_type_e::DELTA_MIATA_MSM:
-  return "DELTA_MIATA_MSM";
-case engine_type_e::DELTA_MIATA_NA6:
-  return "DELTA_MIATA_NA6";
-case engine_type_e::DELTA_MIATA_NB1:
-  return "DELTA_MIATA_NB1";
-case engine_type_e::DELTA_MIATA_NB2:
-  return "DELTA_MIATA_NB2";
+case engine_type_e::POLYGONUS_MIATA_MSM:
+  return "POLYGONUS_MIATA_MSM";
+case engine_type_e::POLYGONUS_MIATA_NA6:
+  return "POLYGONUS_MIATA_NA6";
+case engine_type_e::POLYGONUS_MIATA_NB1:
+  return "POLYGONUS_MIATA_NB1";
+case engine_type_e::POLYGONUS_MIATA_NB2:
+  return "POLYGONUS_MIATA_NB2";
 case engine_type_e::PROTEUS_ANALOG_PWM_TEST:
   return "PROTEUS_ANALOG_PWM_TEST";
 case engine_type_e::PROTEUS_BMW_M73:
