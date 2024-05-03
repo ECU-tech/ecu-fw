@@ -336,10 +336,10 @@ public class Fields {
 	public static final int engine_type_e_MRE_SUBARU_EJ18 = 37;
 	public static final int engine_type_e_MRE_VW_B6 = 62;
 	public static final int engine_type_e_NISSAN_PRIMERA = 5;
-	public static final int engine_type_e_POLYGONUS_MIATA_MSM = 12;
-	public static final int engine_type_e_POLYGONUS_MIATA_NA6 = 4;
-	public static final int engine_type_e_POLYGONUS_MIATA_NB1 = 11;
-	public static final int engine_type_e_POLYGONUS_MIATA_NB2 = 67;
+	public static final int engine_type_e_DELTA_MIATA_MSM = 12;
+	public static final int engine_type_e_DELTA_MIATA_NA6 = 4;
+	public static final int engine_type_e_DELTA_MIATA_NB1 = 11;
+	public static final int engine_type_e_DELTA_MIATA_NB2 = 67;
 	public static final int engine_type_e_PROTEUS_ANALOG_PWM_TEST = 30;
 	public static final int engine_type_e_PROTEUS_BMW_M73 = 63;
 	public static final int engine_type_e_PROTEUS_E65_6H_MAN_IN_THE_MIDDLE = 9;
