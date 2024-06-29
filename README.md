@@ -22,13 +22,6 @@ ECU-tech shares a core with the rusEFI project and most rusEFI boards are compat
  * [Misc tools](/java_tools) - Misc development utilities
  * [misc/Jenkins](/misc/jenkins) - Continuous integration scripts
 
-# External Links
-
- * [Wiki](https://wiki./)
- * [Forum](https://www/forum)
-<!--
- * [YouTube](https://www.youtube.com/)
--->
 
 ## Getting Started
 
